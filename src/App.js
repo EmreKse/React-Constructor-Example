@@ -1,25 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+import Webpages from './webpages/Webpages';
+import React  from 'react';
+import Login from "./webpages/Login";
+import {AuthService} from "./service/AuthService";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const authService = new AuthService()
+    if(!authService.getToken()) {
+        return <Login/>
+    }
+    return (
+        <div className="App">
+            <div style={{display: "flex", justifyContent: "flex-end", marginTop:"0.5em", marginRight:"2em"}}>
+                <button type="submit" style={{marginRight:"0.5em"}} onClick={() => {window.location = '/';}}>Home</button>
+                <button type="submit" onClick={() => {authService.logoutUser(); window.location = '/';}}>Logout</button>
+            </div>
+            <Webpages />
+        </div>
+    );
 }
 
 export default App;
