@@ -1,0 +1,41 @@
+table {
+    text-align: center;
+    margin: 10px auto 10px auto;
+    border: 2px solid;
+    padding: 5px;
+}
+
+table td {
+    width: 200px;
+    border: 1px solid;
+    padding: 3px;
+}
+
+table td button {
+    width: 50px;
+}
+
+#addFac {
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    display: flex;
+    flex-flow: wrap;
+    width: 500px;
+    margin: auto;
+}
+
+#addFac label {
+    width: 200px;
+    margin: 5px;
+}
+
+#addFac input {
+    width: 250px;
+    margin: 5px;
+}
+
+#container {
+    width: 800px;
+    margin: auto;
+}
