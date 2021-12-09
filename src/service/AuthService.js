@@ -18,6 +18,23 @@ export class AuthService {
         })
     }
 
+    static apiPut = (url, body) => {
+        return fetch(AuthService.baseURL + url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem("access_token")
+            },
+            body: JSON.stringify(body)
+        }).then(response => {
+            if(response.status !== 200)
+            {
+                throw new Error(response.status)
+            }
+            return response.json()
+        })
+    }
+
     setToken = idToken => {
         localStorage.setItem("access_token", idToken);
     };

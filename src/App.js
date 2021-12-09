@@ -1,4 +1,5 @@
 import './App.css';
+import 'antd/dist/antd.css';
 import Webpages from './webpages/Webpages';
 import React  from 'react';
 import Login from "./webpages/Login";
