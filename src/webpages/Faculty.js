@@ -85,7 +85,6 @@ const Faculty = () => {
                             <tr>
                                 <th>Faculty Name</th>
                                 <th>Dean</th>
-                                <th>Selection</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -94,10 +93,11 @@ const Faculty = () => {
                                     <td key={faculty.id}>
                                         {faculty.name}
                                     </td>
-                                    <td></td>
-                                    <td>
-                                        <button>Edit</button>
-                                    </td>
+                                    {users.map((user) => {
+                                        if(user.id === faculty.deanUserId) {
+                                            return <td key={user.id}>{user.name}</td>
+                                        }
+                                    })}
                                 </tr>
                             ))}
                         </tbody>
@@ -108,12 +108,12 @@ const Faculty = () => {
                     <label htmlFor="facName">Faculty Name :</label>
                     <Select
                         value={selectedFaculty}
-                        style={{ width: 200 }}
+                        style={{ width: 200, marginTop: 0, marginBottom: 5 }}
                         placeholder="Select a Faculty"
                         onChange={value => {
                             setSelectedFaculty(value);
                             console.log(value);
-                          }}
+                        }}
                     >
                         {facultyList.map((faculty) => (
                             <Option key={faculty.id} value={faculty.id}>
@@ -125,12 +125,12 @@ const Faculty = () => {
                     <label htmlFor="deanName">Dean Name :</label>
                     <Select
                         value={selectedUser}
-                        style={{ width: 200 }}
+                        style={{ width: 200, marginTop: 0, marginBottom: 5 }}
                         placeholder="Select a Dean"
                         onChange={value => {
                             setSelectedUser(value);
                             console.log(value);
-                          }}
+                        }}
                     >
                         {users.map((user) => (
                             <Option key={user.id} value={user.id}>
@@ -139,7 +139,7 @@ const Faculty = () => {
                         ))}
                     </Select>
 
-                    <button onClick={assignDean}>Assign Dean</button>
+                    <button id='assign' onClick={assignDean}>Assign Dean</button>
 
                 </div>
 

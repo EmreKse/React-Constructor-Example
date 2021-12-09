@@ -6,13 +6,9 @@ table {
 }
 
 table td {
-    width: 200px;
+    width: 220px;
     border: 1px solid;
     padding: 3px;
-}
-
-table td button {
-    width: 50px;
 }
 
 #addFac {
