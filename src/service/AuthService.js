@@ -10,8 +10,7 @@ export class AuthService {
                 'Authorization': 'Bearer ' + localStorage.getItem("access_token")
             },
         }).then(response => {
-            if(response.status !== 200)
-            {
+            if (response.status !== 200) {
                 throw new Error(response.status)
             }
             return response.json()
@@ -27,13 +26,42 @@ export class AuthService {
             },
             body: JSON.stringify(body)
         }).then(response => {
-            if(response.status !== 200)
-            {
+            if (response.status !== 200) {
                 throw new Error(response.status)
             }
             return response.json()
         })
     }
+
+    static apiPost = (url, body) => {
+        return fetch(AuthService.baseURL + url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem("access_token")
+            },
+            body: JSON.stringify(body)
+        }).then(response => {
+            if (response.status !== 200) {
+                throw new Error(response.status)
+            }
+            return response.json()
+        })
+    }
+
+    // static apiPost = (url, body) => {
+    //     const requestOptions = {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': 'Bearer ' + localStorage.getItem("access_token")
+    //         },
+    //         body: JSON.stringify(body)
+    //     };
+    //     fetch(AuthService.baseURL + url, requestOptions)
+    //         .then(response => response.json())
+    //         .then(data => this.setState({ postId: data.id }));
+    // }
 
     setToken = idToken => {
         localStorage.setItem("access_token", idToken);
@@ -43,7 +71,7 @@ export class AuthService {
         return localStorage.getItem("access_token");
     };
 
-    setUser (user) {
+    setUser(user) {
         localStorage.setItem("authenticated_user", JSON.stringify(user));
     };
 

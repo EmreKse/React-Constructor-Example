@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { FacultyService } from "../service/FacultyService";
 import { UserService } from "../service/UserService";
 
-import { Select } from 'antd';
+import { Form, Input, Button, Select } from 'antd';
 
 const Faculty = () => {
 
@@ -21,6 +21,20 @@ const Faculty = () => {
     const facultyService = new FacultyService();
 
     const { Option } = Select;
+    const layout = {
+        labelCol: {
+            span: 8,
+        },
+        wrapperCol: {
+            span: 16,
+        },
+    };
+    const tailLayout = {
+        wrapperCol: {
+            offset: 8,
+            span: 16,
+        },
+    };
 
 
     useEffect(() => {
@@ -30,7 +44,7 @@ const Faculty = () => {
                 setFaculties(data);
 
                 let facultyList = data.map(function (item) {
-                    return { name: item.name, id: item.id };
+                    return { name: item.name, id: item.id, deanUserId: item.deanUserId };
                 });
 
                 setFacultyList(facultyList);
@@ -59,8 +73,24 @@ const Faculty = () => {
 
     }, [])
 
+    const onFinish = (values) => {
+        console.log(values);
+    };
+
     const assignDean = (e) => {
         facultyService.assignDean(selectedFaculty, selectedUser).then(
+            (data) => {
+                console.log(data)
+            },
+            (error) => {
+                setIsLoaded(true);
+                setError(error);
+            }
+        )
+    }
+
+    const addFaculty = (e) => {
+        facultyService.assignDean(faculties).then(
             (data) => {
                 console.log(data)
             },
@@ -88,13 +118,13 @@ const Faculty = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {faculties.map(faculty => (
+                            {facultyList.map(faculty => (
                                 <tr>
                                     <td key={faculty.id}>
                                         {faculty.name}
                                     </td>
                                     {users.map((user) => {
-                                        if(user.id === faculty.deanUserId) {
+                                        if (user.id === faculty.deanUserId) {
                                             return <td key={user.id}>{user.name}</td>
                                         }
                                     })}
@@ -103,46 +133,87 @@ const Faculty = () => {
                         </tbody>
                     </table>
                 </div>
-                <div id="addFac">
+                <div id="adding">
 
-                    <label htmlFor="facName">Faculty Name :</label>
-                    <Select
-                        value={selectedFaculty}
-                        style={{ width: 200, marginTop: 0, marginBottom: 5 }}
-                        placeholder="Select a Faculty"
-                        onChange={value => {
-                            setSelectedFaculty(value);
-                            console.log(value);
-                        }}
-                    >
-                        {facultyList.map((faculty) => (
-                            <Option key={faculty.id} value={faculty.id}>
-                                {faculty.name}
-                            </Option>
-                        ))}
-                    </Select>
+                    <Form {...layout} name="control-ref"
+                     onFinish={values => {
+                                    setFaculties(values);
+                                    console.log(values)}}>
+                        <Form.Item
+                            name="name"
+                            label="Faculty Name"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item {...tailLayout}>
+                            <Button id='addFaculty' onClick={addFaculty} type="primary" htmlType="submit">
+                                Add Faculty
+                            </Button>
+                        </Form.Item>
+                    </Form>
 
-                    <label htmlFor="deanName">Dean Name :</label>
-                    <Select
-                        value={selectedUser}
-                        style={{ width: 200, marginTop: 0, marginBottom: 5 }}
-                        placeholder="Select a Dean"
-                        onChange={value => {
-                            setSelectedUser(value);
-                            console.log(value);
-                        }}
-                    >
-                        {users.map((user) => (
-                            <Option key={user.id} value={user.id}>
-                                {user.name}
-                            </Option>
-                        ))}
-                    </Select>
-
-                    <button id='assign' onClick={assignDean}>Assign Dean</button>
+                    <Form>
+                        <Form.Item
+                            name="facName"
+                            label="Faculty Name"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                value={selectedFaculty}
+                                style={{ width: 200, marginTop: 0, marginBottom: 5 }}
+                                placeholder="Select a Faculty"
+                                onChange={value => {
+                                    setSelectedFaculty(value);
+                                    console.log(value);
+                                }}
+                            >
+                                {facultyList.map((faculty) => (
+                                    <Option key={faculty.id} value={faculty.id}>
+                                        {faculty.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="deanName"
+                            label="Dean Name"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                value={selectedUser}
+                                style={{ width: 200, marginTop: 0, marginBottom: 5 }}
+                                placeholder="Select a Dean"
+                                onChange={value => {
+                                    setSelectedUser(value);
+                                    console.log(value);
+                                }}
+                            >
+                                {users.map((user) => (
+                                    <Option key={user.id} value={user.id}>
+                                        {user.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item>
+                        <Button id='assign' onClick={assignDean} type="primary" htmlType="submit">Assign Dean</Button>
+                        </Form.Item>
+                    </Form>
 
                 </div>
-
             </div>
         );
     }

@@ -11,18 +11,38 @@ table td {
     padding: 3px;
 }
 
-#addFac {
+#adding {
     justify-content: space-around;
     align-items: center;
     align-content: center;
     display: flex;
     flex-flow: wrap;
-    width: 500px;
+    width: 800px;
     margin: auto;
 }
 
+/* #addFac {
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    display: flex;
+    flex-flow: wrap;
+    width: 400px;
+    margin: auto;
+}
+
+#assignDean {
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    display: flex;
+    flex-flow: wrap;
+    width: 400px;
+    margin: auto;
+} */
+
 #addFac label {
-    width: 200px;
+    width: 160px;
     margin: 5px;
 }
 
