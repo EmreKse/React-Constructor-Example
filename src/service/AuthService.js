@@ -34,7 +34,8 @@ export class AuthService {
     }
 
     static apiPost = (url, body) => {
-        return fetch(AuthService.baseURL + url, {
+        console.log(body);
+        fetch(AuthService.baseURL + url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,17 +51,17 @@ export class AuthService {
     }
 
     // static apiPost = (url, body) => {
+    //     console.log(body);
     //     const requestOptions = {
     //         method: 'POST',
     //         headers: {
     //             'Content-Type': 'application/json',
     //             'Authorization': 'Bearer ' + localStorage.getItem("access_token")
     //         },
-    //         body: JSON.stringify(body)
+    //         body: JSON.stringify(body),
     //     };
-    //     fetch(AuthService.baseURL + url, requestOptions)
-    //         .then(response => response.json())
-    //         .then(data => this.setState({ postId: data.id }));
+    //     return fetch(AuthService.baseURL + url, requestOptions)
+    //         .then(response => response.json());
     // }
 
     setToken = idToken => {

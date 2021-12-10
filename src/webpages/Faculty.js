@@ -90,7 +90,7 @@ const Faculty = () => {
     }
 
     const addFaculty = (e) => {
-        facultyService.assignDean(faculties).then(
+        facultyService.addFaculty(e.value.facultyName).then(
             (data) => {
                 console.log(data)
             },
@@ -136,11 +136,9 @@ const Faculty = () => {
                 <div id="adding">
 
                     <Form {...layout} name="control-ref"
-                     onFinish={values => {
-                                    setFaculties(values);
-                                    console.log(values)}}>
+                        onFinish={addFaculty}>
                         <Form.Item
-                            name="name"
+                            name="facultyName"
                             label="Faculty Name"
                             rules={[
                                 {
@@ -151,7 +149,7 @@ const Faculty = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
-                            <Button id='addFaculty' onClick={addFaculty} type="primary" htmlType="submit">
+                            <Button type="primary" htmlType="submit">
                                 Add Faculty
                             </Button>
                         </Form.Item>
@@ -209,7 +207,7 @@ const Faculty = () => {
                             </Select>
                         </Form.Item>
                         <Form.Item>
-                        <Button id='assign' onClick={assignDean} type="primary" htmlType="submit">Assign Dean</Button>
+                            <Button onClick={assignDean} type="primary" htmlType="submit">Assign Dean</Button>
                         </Form.Item>
                     </Form>
 
