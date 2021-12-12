@@ -17,6 +17,20 @@ export class AuthService {
         })
     }
 
+    static apiDelete = (url) => {
+        return fetch(AuthService.baseURL + url, {
+            method:'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("access_token")
+            },
+        }).then(response => {
+            if (response.status !== 200) {
+                throw new Error(response.status)
+            }
+            return response.json()
+        })
+    }
+
     static apiPut = (url, body) => {
         return fetch(AuthService.baseURL + url, {
             method: 'PUT',
@@ -50,19 +64,7 @@ export class AuthService {
         })
     }
 
-    // static apiPost = (url, body) => {
-    //     console.log(body);
-    //     const requestOptions = {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': 'Bearer ' + localStorage.getItem("access_token")
-    //         },
-    //         body: JSON.stringify(body),
-    //     };
-    //     return fetch(AuthService.baseURL + url, requestOptions)
-    //         .then(response => response.json());
-    // }
+
 
     setToken = idToken => {
         localStorage.setItem("access_token", idToken);

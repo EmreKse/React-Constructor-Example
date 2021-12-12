@@ -1,12 +1,12 @@
 import './Faculty.css';
+import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react';
-import { FacultyService } from "../service/FacultyService";
-import { UserService } from "../service/UserService";
+import { FacultyService } from '../service/FacultyService';
+import { UserService } from '../service/UserService';
 
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Button, Select, notification } from 'antd';
 
 const Faculty = () => {
-
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -36,7 +36,6 @@ const Faculty = () => {
         },
     };
 
-
     useEffect(() => {
         facultyService.getFaculties().then(
             (data) => {
@@ -61,7 +60,7 @@ const Faculty = () => {
 
                 let userList = data.map(function (item) {
                     return { name: item.username, id: item.id };
-                })
+                });
 
                 setUsers(userList);
             },
@@ -70,36 +69,59 @@ const Faculty = () => {
                 setError(error);
             }
         );
-
-    }, [])
-
-    const onFinish = (values) => {
-        console.log(values);
-    };
+    }, []);
 
     const assignDean = (e) => {
         facultyService.assignDean(selectedFaculty, selectedUser).then(
             (data) => {
-                console.log(data)
+                console.log(data);
+                notification.open({
+                    message: 'Successfull',
+                    description:
+                      'Dean Assigned',
+                  });
             },
             (error) => {
                 setIsLoaded(true);
                 setError(error);
             }
-        )
-    }
+        );
+    };
 
     const addFaculty = (e) => {
-        facultyService.addFaculty(e.value.facultyName).then(
+        facultyService.addFaculty(e.facultyName).then(
             (data) => {
-                console.log(data)
+                console.log(data);
+                notification.open({
+                    message: 'Successfull',
+                    description:
+                      'Faculty Added',
+                  });
             },
             (error) => {
                 setIsLoaded(true);
                 setError(error);
             }
-        )
-    }
+        );
+    };
+
+    const deleteFaculty = (e) => {
+        console.log(e.currentTarget.value);
+        facultyService.deleteFaculty(e.currentTarget.value).then(
+            (data) => {
+                console.log(data);
+                notification.open({
+                    message: 'Successfull',
+                    description:
+                      'Faculty Deleted',
+                  });
+            },
+            (error) => {
+                setIsLoaded(true);
+                setError(error);
+            }
+        );
+    };
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -107,25 +129,34 @@ const Faculty = () => {
         return <div>Loading...</div>;
     } else {
         return (
-            <div id="container">
+            <div id='container'>
                 <h2>Faculties</h2>
                 <div>
                     <table>
                         <thead>
                             <tr>
+                                <th>Action</th>
                                 <th>Faculty Name</th>
                                 <th>Dean</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {facultyList.map(faculty => (
-                                <tr>
-                                    <td key={faculty.id}>
-                                        {faculty.name}
+                            {facultyList.map((faculty) => (
+                                <tr key={faculty.id}>
+                                    <td>
+                                        <Button type='primary' shape='round' size='small'
+                                            style={{ marginRight: 5 + 'px' }}>Add Department
+                                        </Button>
+                                        <Button type='primary' shape='round' size='small'
+                                            value={faculty.id} onClick={deleteFaculty}
+                                            danger>
+                                            Delete
+                                        </Button>
                                     </td>
+                                    <td>{faculty.name}</td>
                                     {users.map((user) => {
                                         if (user.id === faculty.deanUserId) {
-                                            return <td key={user.id}>{user.name}</td>
+                                            return <td key={user.id}>{user.name}</td>;
                                         }
                                     })}
                                 </tr>
@@ -133,13 +164,11 @@ const Faculty = () => {
                         </tbody>
                     </table>
                 </div>
-                <div id="adding">
-
-                    <Form {...layout} name="control-ref"
-                        onFinish={addFaculty}>
+                <div id='adding'>
+                    <Form {...layout} name='control-ref' onFinish={addFaculty}>
                         <Form.Item
-                            name="facultyName"
-                            label="Faculty Name"
+                            name='facultyName'
+                            label='Faculty Name'
                             rules={[
                                 {
                                     required: true,
@@ -149,7 +178,7 @@ const Faculty = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
-                            <Button type="primary" htmlType="submit">
+                            <Button type='primary' htmlType='submit'>
                                 Add Faculty
                             </Button>
                         </Form.Item>
@@ -157,8 +186,8 @@ const Faculty = () => {
 
                     <Form>
                         <Form.Item
-                            name="facName"
-                            label="Faculty Name"
+                            name='facName'
+                            label='Faculty Name'
                             rules={[
                                 {
                                     required: true,
@@ -168,8 +197,8 @@ const Faculty = () => {
                             <Select
                                 value={selectedFaculty}
                                 style={{ width: 200, marginTop: 0, marginBottom: 5 }}
-                                placeholder="Select a Faculty"
-                                onChange={value => {
+                                placeholder='Select a Faculty'
+                                onChange={(value) => {
                                     setSelectedFaculty(value);
                                     console.log(value);
                                 }}
@@ -182,8 +211,8 @@ const Faculty = () => {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="deanName"
-                            label="Dean Name"
+                            name='deanName'
+                            label='Dean Name'
                             rules={[
                                 {
                                     required: true,
@@ -193,8 +222,8 @@ const Faculty = () => {
                             <Select
                                 value={selectedUser}
                                 style={{ width: 200, marginTop: 0, marginBottom: 5 }}
-                                placeholder="Select a Dean"
-                                onChange={value => {
+                                placeholder='Select a Dean'
+                                onChange={(value) => {
                                     setSelectedUser(value);
                                     console.log(value);
                                 }}
@@ -207,13 +236,14 @@ const Faculty = () => {
                             </Select>
                         </Form.Item>
                         <Form.Item>
-                            <Button onClick={assignDean} type="primary" htmlType="submit">Assign Dean</Button>
+                            <Button onClick={assignDean} type='primary' htmlType='submit'>
+                                Assign Dean
+                            </Button>
                         </Form.Item>
                     </Form>
-
                 </div>
             </div>
         );
     }
-}
+};
 export default Faculty;

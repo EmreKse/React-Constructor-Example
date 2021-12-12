@@ -12,4 +12,9 @@ export class FacultyService {
     addFaculty (facultyName) {
         return AuthService.apiPost("faculty/",{name: facultyName})
     }
+
+    deleteFaculty (facultyId) {
+        console.log(facultyId);
+        return AuthService.apiDelete("faculty/" + facultyId)
+    }
 }
