@@ -9,6 +9,10 @@ export class FacultyService {
         return AuthService.apiPut("faculty/" + facultyId + "/assignDean/", {deanId: userId})
     }
 
+    updateFaculty (facultyId) {
+        return AuthService.apiPut("faculty/"+ facultyId)
+    }
+
     addFaculty (facultyName) {
         return AuthService.apiPost("faculty/",{name: facultyName})
     }

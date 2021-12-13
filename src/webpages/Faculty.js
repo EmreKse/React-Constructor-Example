@@ -1,10 +1,11 @@
 import './Faculty.css';
-import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import { FacultyService } from '../service/FacultyService';
 import { UserService } from '../service/UserService';
+import { DepartmentService } from '../service/DepartmentService';
 
 import { Form, Input, Button, Select, notification } from 'antd';
+
 
 const Faculty = () => {
     const [error, setError] = useState(null);
@@ -17,6 +18,7 @@ const Faculty = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [users, setUsers] = useState([]);
 
+    const departmentService = new DepartmentService();
     const userService = new UserService();
     const facultyService = new FacultyService();
 
@@ -78,8 +80,8 @@ const Faculty = () => {
                 notification.open({
                     message: 'Successfull',
                     description:
-                      'Dean Assigned',
-                  });
+                        'Dean Assigned',
+                });
             },
             (error) => {
                 setIsLoaded(true);
@@ -88,6 +90,21 @@ const Faculty = () => {
         );
     };
 
+    const getDepartmentsByFaculty = (e) => {
+        var facultyId = e.currentTarget.value;
+        departmentService.getDepartmentsByFaculty(facultyId).then(
+            (data) => {
+                console.log(data);
+                var path = "/department/" + (facultyId);
+
+            },
+            (error) => {
+                setIsLoaded(true);
+                setError(error);
+            }
+        )
+    }
+
     const addFaculty = (e) => {
         facultyService.addFaculty(e.facultyName).then(
             (data) => {
@@ -95,8 +112,8 @@ const Faculty = () => {
                 notification.open({
                     message: 'Successfull',
                     description:
-                      'Faculty Added',
-                  });
+                        'Faculty Added',
+                });
             },
             (error) => {
                 setIsLoaded(true);
@@ -113,8 +130,8 @@ const Faculty = () => {
                 notification.open({
                     message: 'Successfull',
                     description:
-                      'Faculty Deleted',
-                  });
+                        'Faculty Deleted',
+                });
             },
             (error) => {
                 setIsLoaded(true);
@@ -145,7 +162,9 @@ const Faculty = () => {
                                 <tr key={faculty.id}>
                                     <td>
                                         <Button type='primary' shape='round' size='small'
-                                            style={{ marginRight: 5 + 'px' }}>Add Department
+                                            style={{ marginRight: 5 + 'px' }}
+                                            value={faculty.id}
+                                            onClick={getDepartmentsByFaculty}>Departments
                                         </Button>
                                         <Button type='primary' shape='round' size='small'
                                             value={faculty.id} onClick={deleteFaculty}
@@ -187,7 +206,7 @@ const Faculty = () => {
                     <Form>
                         <Form.Item
                             name='facName'
-                            label='Faculty Name'
+                            label='Faculty Name: '
                             rules={[
                                 {
                                     required: true,

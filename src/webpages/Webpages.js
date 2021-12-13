@@ -6,6 +6,8 @@ import {
 import Home from './Home';
 import User from './User';
 import Faculty from "./Faculty";
+import Department from './Department';
+
 const Webpages = () => {
     return(
         <Router>
@@ -13,6 +15,7 @@ const Webpages = () => {
                 <Route exact path="/" element= {<Home />} />
                 <Route path = "/user" element = {<User />} />
                 <Route path = "/faculty" element = {<Faculty />} />
+                <Route path = "/department" element = {<Department />} />
             </Routes>
         </Router>
 

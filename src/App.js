@@ -4,6 +4,7 @@ import Webpages from './webpages/Webpages';
 import React  from 'react';
 import Login from "./webpages/Login";
 import {AuthService} from "./service/AuthService";
+import { Button } from 'antd';
 
 function App() {
     const authService = new AuthService()
@@ -13,8 +14,8 @@ function App() {
     return (
         <div className="App">
             <div style={{display: "flex", justifyContent: "flex-end", marginTop:"0.5em", marginRight:"2em"}}>
-                <button type="submit" style={{marginRight:"0.5em"}} onClick={() => {window.location = '/';}}>Home</button>
-                <button type="submit" onClick={() => {authService.logoutUser(); window.location = '/';}}>Logout</button>
+                <Button type="submit" style={{marginRight:"0.5em"}} onClick={() => {window.location = '/';}}>Home</Button>
+                <Button type="submit" onClick={() => {authService.logoutUser(); window.location = '/';}} danger>Logout</Button>
             </div>
             <Webpages />
         </div>
