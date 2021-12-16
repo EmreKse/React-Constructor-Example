@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FacultyService } from '../service/FacultyService';
-import { UserService } from '../service/UserService';
-import { DepartmentService } from '../service/DepartmentService';
+import { FacultyService } from '../../service/FacultyService';
+import { UserService } from '../../service/UserService';
+import { DepartmentService } from '../../service/DepartmentService';
 
-import { Form, Input, Button, Select, notification, Layout, Table, Tag, Space } from 'antd';
+import { Form, Input, Button, Select, notification, Layout, Table, Modal } from 'antd';
 
 export default function Department() {
 
@@ -14,8 +14,10 @@ export default function Department() {
     const [facultyList, setFacultyList] = useState([]);
     const [faculties, setFaculties] = useState([]);
 
-    const [selectedUser, setSelectedUser] = useState(null);
     const [users, setUsers] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [instructors, setInstructors] = useState([]);
+    const [selectedInstructor, setSelectedInstructor] = useState(null);
 
     const [selectedDepartment, setSelectedDepartment] = useState(null);
     const [departments, setDepartments] = useState([]);
@@ -35,6 +37,35 @@ export default function Department() {
             span: 16,
         },
     };
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showModal = (e) => {
+        setIsModalVisible(true);
+        let facultyId = (e.currentTarget.value);
+        setSelectedFaculty(facultyId);
+
+        userService.getFacultyUsers(selectedFaculty).then(
+            (data) => {
+                setIsLoaded(true);
+
+                let list = data.map(function (item) {
+                    return { name: item.username, id: item.id };
+                });
+
+                setInstructors(list);
+            },
+            (error) => {
+                setIsLoaded(true);
+                setError(error);
+            }
+        );
+
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    }
 
     useEffect(() => {
         facultyService.getFaculties().then(
@@ -90,53 +121,61 @@ export default function Department() {
 
     const addDepartment = (e) => {
         departmentService.addDepartment(e.departmentName, selectedFaculty)
-        // .then((data) => {
-        //     console.log(data);
-        //     notification.open({
-        //         message: 'Successfull',
-        //         description:
-        //             'Department Added',
-        //     });
-        // },
-        //     (error) => {
-        //         setIsLoaded(true);
-        //         setError(error);
-        //     }
-        // );
+            .then((data) => {
+                console.log(data);
+                notification.open({
+                    message: 'Successfull',
+                    description:
+                        'Department Added',
+                });
+            },
+                (error) => {
+                    setIsLoaded(true);
+                    setError(error);
+                }
+            );
+    }
+
+    const addInstructor = (e) => {
+        setIsModalVisible(false);
+        departmentService.addInstructorToDepartment(selectedDepartment,selectedInstructor)
     }
 
     const columns = [
         {
             title: 'Department Name',
             dataIndex: 'name',
-            key: 'name',
+            key: 'id',
+            sorter: (a, b) => a.name.localeCompare(b.name)
         },
         {
             title: 'Faculty Name',
             dataIndex: 'facultyName',
             key: 'facultyName',
+            defaultSortOrder: 'ascend',
+            sorter: (a, b) => a.facultyName.localeCompare(b.facultyName)
         },
         {
             title: 'Action',
-            key: 'action',
-            render: () => (
-                <div style={{"textAlign":"center"}}>
-                    <Button type="primary" shape="round" size={"medium"} style={{"margin-right":"5px"}}>
-                        Update
+            dataIndex: 'facultyId',
+            key: 'facultyId',
+            render: (dataIndex) => (
+                <div style={{ "textAlign": "center" }}>
+                    <Button type="primary" shape="round" size={"medium"} style={{ "marginRight": "5px" }} onClick={showModal} value={dataIndex}>
+                        Add Instructor
                     </Button>
                     <Button type="primary" shape="round" size={"medium"} danger>
                         Delete
                     </Button>
                 </div>
-
             ),
         },
     ];
 
-
     return (
         <Layout>
             <Content>
+
                 <Form style={{ "width": "400px", "margin": "20px auto" }} {...layout} name="control-ref" onFinish={addDepartment}>
                     <h2>Add Department</h2>
                     <Form.Item
@@ -179,6 +218,40 @@ export default function Department() {
                         </Button>
                     </Form.Item>
                 </Form>
+
+                <Modal title="Add Instructor" visible={isModalVisible} onCancel={handleCancel}
+                 footer = {[
+                     <Button key="back" onClick={handleCancel}>Cancel</Button>,
+                     <Button key="submit" type='primary' onClick={addInstructor}>Add Instructor</Button>
+                 ]}
+                 >
+                    <Form style={{ "width": "400px", "margin": "20px auto" }} {...layout} name="control-ref" onFinish={addInstructor}>
+                    <Form.Item
+                        name='member'
+                        label='Instructor Name: '
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                    >
+                        <Select
+                            value={selectedInstructor}
+                            placeholder='Select a Instructor'
+                            onChange={(value) => {
+                                setSelectedInstructor(value);
+                            }}
+                        >
+                            {instructors.map((item) => (
+                                <Option key={item.id} value={item.id}>
+                                    {item.name}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    </Form>
+                </Modal>
+
                 <div style={{ "width": "800px", "margin": "auto" }}>
                     <Table columns={columns} dataSource={departments} />
                 </div>

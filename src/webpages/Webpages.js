@@ -5,8 +5,8 @@ import {
 } from "react-router-dom";
 import Home from './Home';
 import User from './User';
-import Faculty from "./Faculty";
-import Department from './Department';
+import Faculty from "./faculty/Faculty";
+import Department from './department/Department';
 
 const Webpages = () => {
     return(

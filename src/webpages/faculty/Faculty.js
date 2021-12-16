@@ -1,8 +1,8 @@
 import './Faculty.css';
 import React, { useState, useEffect } from 'react';
-import { FacultyService } from '../service/FacultyService';
-import { UserService } from '../service/UserService';
-import { DepartmentService } from '../service/DepartmentService';
+import { FacultyService } from '../../service/FacultyService';
+import { UserService } from '../../service/UserService';
+import { DepartmentService } from '../../service/DepartmentService';
 
 import { Form, Input, Button, Select, notification } from 'antd';
 
@@ -90,20 +90,22 @@ const Faculty = () => {
         );
     };
 
-    const getDepartmentsByFaculty = (e) => {
-        var facultyId = e.currentTarget.value;
-        departmentService.getDepartmentsByFaculty(facultyId).then(
+    const addInstructor = (e) => {
+        facultyService.addInstructor(selectedFaculty, selectedUser).then(
             (data) => {
                 console.log(data);
-                var path = "/department/" + (facultyId);
-
+                notification.open({
+                    message: 'Successfull',
+                    description:
+                        'Instructor Assigned',
+                });
             },
             (error) => {
                 setIsLoaded(true);
                 setError(error);
             }
-        )
-    }
+        );
+    };
 
     const addFaculty = (e) => {
         facultyService.addFaculty(e.facultyName).then(
@@ -164,7 +166,8 @@ const Faculty = () => {
                                         <Button type='primary' shape='round' size='small'
                                             style={{ marginRight: 5 + 'px' }}
                                             value={faculty.id}
-                                            onClick={getDepartmentsByFaculty}>Departments
+                                            // onClick={getDepartmentsByFaculty}
+                                            >Departments
                                         </Button>
                                         <Button type='primary' shape='round' size='small'
                                             value={faculty.id} onClick={deleteFaculty}
@@ -260,6 +263,65 @@ const Faculty = () => {
                             </Button>
                         </Form.Item>
                     </Form>
+
+                    <Form>
+                        <Form.Item
+                            name='facName'
+                            label='Faculty Name: '
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                value={selectedFaculty}
+                                style={{ width: 200, marginTop: 0, marginBottom: 5 }}
+                                placeholder='Select a Faculty'
+                                onChange={(value) => {
+                                    setSelectedFaculty(value);
+                                    console.log(value);
+                                }}
+                            >
+                                {facultyList.map((faculty) => (
+                                    <Option key={faculty.id} value={faculty.id}>
+                                        {faculty.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name='member'
+                            label='Instructor Name'
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                value={selectedUser}
+                                style={{ width: 200, marginTop: 0, marginBottom: 5 }}
+                                placeholder='Select a member as an Instructor'
+                                onChange={(value) => {
+                                    setSelectedUser(value);
+                                    console.log(value);
+                                }}
+                            >
+                                {users.map((user) => (
+                                    <Option key={user.id} value={user.id}>
+                                        {user.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button onClick={addInstructor} type='primary' htmlType='submit'>
+                                Assign Instructor
+                            </Button>
+                        </Form.Item>
+                    </Form>
+
                 </div>
             </div>
         );

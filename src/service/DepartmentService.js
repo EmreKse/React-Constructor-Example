@@ -18,5 +18,9 @@ export class DepartmentService {
         return AuthService.apiDelete("department/" + departmentId)
     }
 
+    addInstructorToDepartment (departmentId, member) {
+        return AuthService.apiPut('department/'+ departmentId +'/add_instructor/' , {memberId : member})
+    }
+
 }
 
