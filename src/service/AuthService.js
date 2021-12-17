@@ -27,7 +27,7 @@ export class AuthService {
             if (response.status !== 200) {
                 throw new Error(response.status)
             }
-            return response.json()
+            return response;
         })
     }
 
@@ -48,7 +48,6 @@ export class AuthService {
     }
 
     static apiPost = (url, body) => {
-        console.log(body);
         fetch(AuthService.baseURL + url, {
             method: 'POST',
             headers: {

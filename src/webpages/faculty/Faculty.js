@@ -9,7 +9,7 @@ import { Form, Input, Button, Select, notification } from 'antd';
 
 const Faculty = () => {
     const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(0);
 
     const [selectedFaculty, setSelectedFaculty] = useState(null);
     const [facultyList, setFacultyList] = useState([]);
@@ -71,12 +71,12 @@ const Faculty = () => {
                 setError(error);
             }
         );
-    }, []);
+    }, [isLoaded]);
 
     const assignDean = (e) => {
         facultyService.assignDean(selectedFaculty, selectedUser).then(
             (data) => {
-                console.log(data);
+                setIsLoaded(isLoaded+1);
                 notification.open({
                     message: 'Successfull',
                     description:
@@ -91,9 +91,9 @@ const Faculty = () => {
     };
 
     const addInstructor = (e) => {
+        setIsLoaded(isLoaded+1);
         facultyService.addInstructor(selectedFaculty, selectedUser).then(
             (data) => {
-                console.log(data);
                 notification.open({
                     message: 'Successfull',
                     description:
@@ -108,9 +108,9 @@ const Faculty = () => {
     };
 
     const addFaculty = (e) => {
+        setIsLoaded(isLoaded+1);
         facultyService.addFaculty(e.facultyName).then(
             (data) => {
-                console.log(data);
                 notification.open({
                     message: 'Successfull',
                     description:
@@ -125,10 +125,10 @@ const Faculty = () => {
     };
 
     const deleteFaculty = (e) => {
+        setIsLoaded(isLoaded+1);
         console.log(e.currentTarget.value);
         facultyService.deleteFaculty(e.currentTarget.value).then(
             (data) => {
-                console.log(data);
                 notification.open({
                     message: 'Successfull',
                     description:

@@ -5,9 +5,9 @@
 ### Admin assigns a dean to the faculty -----
 ### Admin views the list of faculties with their deans -----
 ### Dean adds a department to the faculty -----
-### Dean adds an instructor as a faculty member
-### Dean assigns an instructor of his faculty to a department
-### Dean removes (passivate) an instructor from the Faculty
+### Dean adds an instructor as a faculty member -----
+### Dean assigns an instructor of his faculty to a department -----
+### Dean removes (passivate) an instructor from the Faculty -----
 ### Faculty forwards a request for the addition/removal of a course to the admin
 ### Admin approves or rejects the request for the addition/removal of a course
 ### Dean assigns an instructors to courses

@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { FacultyService } from '../../service/FacultyService';
 import { UserService } from '../../service/UserService';
 import { DepartmentService } from '../../service/DepartmentService';
+import { AuthService } from '../../service/AuthService';
 
 import { Form, Input, Button, Select, notification, Layout, Table, Modal } from 'antd';
 
 export default function Department() {
 
     const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(0);
 
     const [selectedFaculty, setSelectedFaculty] = useState(null);
     const [facultyList, setFacultyList] = useState([]);
@@ -25,6 +26,7 @@ export default function Department() {
     const departmentService = new DepartmentService();
     const userService = new UserService();
     const facultyService = new FacultyService();
+    const authService = new AuthService();
 
     const { Header, Footer, Sider, Content } = Layout;
 
@@ -45,9 +47,17 @@ export default function Department() {
         let facultyId = (e.currentTarget.value);
         setSelectedFaculty(facultyId);
 
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    }
+
+    useEffect(() => {
+        console.log(selectedFaculty);
+        console.log(authService.getToken())
         userService.getFacultyUsers(selectedFaculty).then(
             (data) => {
-                setIsLoaded(true);
 
                 let list = data.map(function (item) {
                     return { name: item.username, id: item.id };
@@ -56,21 +66,17 @@ export default function Department() {
                 setInstructors(list);
             },
             (error) => {
-                setIsLoaded(true);
+                setIsLoaded(isLoaded + 1);
                 setError(error);
             }
         );
+    }, [selectedFaculty])
 
-    };
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    }
 
     useEffect(() => {
         facultyService.getFaculties().then(
             (data) => {
-                setIsLoaded(true);
                 setFaculties(data);
 
                 let facultyList = data.map(function (item) {
@@ -80,15 +86,13 @@ export default function Department() {
                 setFacultyList(facultyList);
             },
             (error) => {
-                setIsLoaded(true);
+                setIsLoaded(isLoaded + 1);
                 setError(error);
             }
         );
 
         userService.getAllUsers().then(
             (data) => {
-                setIsLoaded(true);
-
                 let userList = data.map(function (item) {
                     return { name: item.username, id: item.id };
                 });
@@ -96,15 +100,13 @@ export default function Department() {
                 setUsers(userList);
             },
             (error) => {
-                setIsLoaded(true);
+                setIsLoaded(isLoaded + 1);
                 setError(error);
             }
         );
 
         departmentService.getAllDepartments().then(
             (data) => {
-                setIsLoaded(true);
-
                 let departments = data.map(function (item) {
                     return { name: item.name, id: item.id, facultyName: item.facultyName, facultyId: item.facultyId };
                 });
@@ -112,17 +114,18 @@ export default function Department() {
                 setDepartments(departments);
             },
             (error) => {
-                setIsLoaded(true);
+                setIsLoaded(isLoaded + 1);
                 setError(error);
             }
         )
 
-    }, []);
+    }, [isLoaded]);
 
     const addDepartment = (e) => {
+        setIsLoaded(isLoaded + 1);
         departmentService.addDepartment(e.departmentName, selectedFaculty)
             .then((data) => {
-                console.log(data);
+                setIsLoaded(isLoaded + 1);
                 notification.open({
                     message: 'Successfull',
                     description:
@@ -130,15 +133,29 @@ export default function Department() {
                 });
             },
                 (error) => {
-                    setIsLoaded(true);
+                    setIsLoaded(isLoaded + 1);
                     setError(error);
                 }
             );
+            setIsLoaded(isLoaded + 1);
     }
 
     const addInstructor = (e) => {
         setIsModalVisible(false);
-        departmentService.addInstructorToDepartment(selectedDepartment,selectedInstructor)
+        departmentService.addInstructorToDepartment(selectedDepartment, selectedInstructor)
+            .then((data) => {
+                setIsLoaded(isLoaded + 1);
+                notification.open({
+                    message: 'Successfull',
+                    description:
+                        'Instructor Added',
+                });
+            },
+                (error) => {
+                    setIsLoaded(isLoaded + 1);
+                    setError(error);
+                }
+            );
     }
 
     const columns = [
@@ -220,35 +237,35 @@ export default function Department() {
                 </Form>
 
                 <Modal title="Add Instructor" visible={isModalVisible} onCancel={handleCancel}
-                 footer = {[
-                     <Button key="back" onClick={handleCancel}>Cancel</Button>,
-                     <Button key="submit" type='primary' onClick={addInstructor}>Add Instructor</Button>
-                 ]}
-                 >
+                    footer={[
+                        <Button key="back" onClick={handleCancel}>Cancel</Button>,
+                        <Button key="submit" type='primary' onClick={addInstructor}>Add Instructor</Button>
+                    ]}
+                >
                     <Form style={{ "width": "400px", "margin": "20px auto" }} {...layout} name="control-ref" onFinish={addInstructor}>
-                    <Form.Item
-                        name='member'
-                        label='Instructor Name: '
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
-                    >
-                        <Select
-                            value={selectedInstructor}
-                            placeholder='Select a Instructor'
-                            onChange={(value) => {
-                                setSelectedInstructor(value);
-                            }}
+                        <Form.Item
+                            name='member'
+                            label='Instructor Name: '
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
                         >
-                            {instructors.map((item) => (
-                                <Option key={item.id} value={item.id}>
-                                    {item.name}
-                                </Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
+                            <Select
+                                value={selectedInstructor}
+                                placeholder='Select a Instructor'
+                                onChange={(value) => {
+                                    setSelectedInstructor(value);
+                                }}
+                            >
+                                {instructors.map((item) => (
+                                    <Option key={item.id} value={item.id}>
+                                        {item.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
                     </Form>
                 </Modal>
 
