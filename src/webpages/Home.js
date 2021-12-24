@@ -11,6 +11,8 @@ const Home = () => {
             <Link to={'/faculty'} >Faculties</Link>
             <br />
             <Link to={'/department'}>Departments</Link>
+            <br />
+            <Link to = {'/course'}>Course</Link>
         </div>
     );
 }

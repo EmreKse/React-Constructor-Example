@@ -22,5 +22,9 @@ export class DepartmentService {
         return AuthService.apiPut('department/'+ departmentId +'/add_instructor/' , {memberId : member})
     }
 
+    addCourseToDepartment (departmentId, course) {
+        return AuthService.apiPost('department/' + departmentId + '/add_course/', {name : course})
+    }
+
 }
 

@@ -22,7 +22,6 @@ export class FacultyService {
     }
 
     deleteFaculty (facultyId) {
-        console.log(facultyId);
         return AuthService.apiDelete("faculty/" + facultyId)
     }
 }

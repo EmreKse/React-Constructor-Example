@@ -1,3 +1,4 @@
+import { Route } from "react-router-dom"
 
 export class AuthService {
 
@@ -10,23 +11,19 @@ export class AuthService {
                 'Authorization': 'Bearer ' + localStorage.getItem("access_token")
             },
         }).then(response => {
-            if (response.status !== 200) {
-                throw new Error(response.status)
-            }
+            AuthService.responseStatus(response);
             return response.json()
         })
     }
 
     static apiDelete = (url) => {
         return fetch(AuthService.baseURL + url, {
-            method:'DELETE',
+            method: 'DELETE',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem("access_token")
             },
         }).then(response => {
-            if (response.status !== 200) {
-                throw new Error(response.status)
-            }
+            AuthService.responseStatus(response);
             return response;
         })
     }
@@ -40,15 +37,13 @@ export class AuthService {
             },
             body: JSON.stringify(body)
         }).then(response => {
-            if (response.status !== 200) {
-                throw new Error(response.status)
-            }
+            AuthService.responseStatus(response);
             return response.json()
         })
     }
 
     static apiPost = (url, body) => {
-        fetch(AuthService.baseURL + url, {
+        return fetch(AuthService.baseURL + url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,9 +51,7 @@ export class AuthService {
             },
             body: JSON.stringify(body)
         }).then(response => {
-            if (response.status !== 200) {
-                throw new Error(response.status)
-            }
+            AuthService.responseStatus(response);
             return response.json()
         })
     }
@@ -72,6 +65,17 @@ export class AuthService {
     getToken = () => {
         return localStorage.getItem("access_token");
     };
+
+    static responseStatus(response) {
+        if (response.status === 401) {
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("authenticated_user");
+            window.location = '/'
+        }
+        if (response.status !== 200) {
+            throw new Error(response.status)
+        }
+    }
 
     setUser(user) {
         localStorage.setItem("authenticated_user", JSON.stringify(user));
