@@ -13,6 +13,8 @@ const Home = () => {
             <Link to={'/department'}>Departments</Link>
             <br />
             <Link to = {'/course'}>Course</Link>
+            <br />
+            <Link to = {'/semester'}>Semester</Link>
         </div>
     );
 }

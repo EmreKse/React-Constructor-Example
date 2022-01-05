@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function RequestList() {
+export default function SelectCourses() {
     return (
         <>
             

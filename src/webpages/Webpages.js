@@ -8,6 +8,7 @@ import User from './User';
 import Faculty from "./faculty/Faculty";
 import Department from './department/Department';
 import Course from './course/Course';
+import Semester from './semester/Semester';
 
 const Webpages = () => {
     return(
@@ -18,6 +19,7 @@ const Webpages = () => {
                 <Route path = "/faculty" element = {<Faculty />} />
                 <Route path = "/department" element = {<Department />} />
                 <Route path = "/course" element = {<Course/>} />
+                <Route path = "/semester" element = {<Semester/>} />
             </Routes>
         </Router>
 

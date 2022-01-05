@@ -75,7 +75,7 @@ export default function AssignDean(props) {
                 });
             },
             (error) => {
-                setIsLoaded(true);
+                setIsLoaded(isLoaded + 1);
                 setError(error);
             }
         );

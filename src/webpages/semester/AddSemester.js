@@ -1,15 +1,11 @@
-import './Faculty.css';
 import React, { useState } from 'react';
-import { FacultyService } from '../../service/FacultyService';
+import { SemesterService } from '../../service/SemesterService';
 
 import { Form, Input, Button, notification, Modal } from 'antd';
 
-export default function AddFaculty() {
+export default function AddSemester() {
 
     const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(0);
-
-    const facultyService = new FacultyService();
 
     const [form] = Form.useForm();
     const layout = {
@@ -37,39 +33,38 @@ export default function AddFaculty() {
         setIsModalVisible(false);
     }
 
-    const addFaculty = (e) => {
-        setIsLoaded(isLoaded + 1);
+    const AddSemester = (e) => {
         setIsModalVisible(false);
-        facultyService.addFaculty(e.facultyName).then(
+        SemesterService.addSemester(e.semesterName).then(
             (data) => {
                 console.log(data)
                 if (data != null) {
                     notification.open({
                         message: 'Successfull',
-                        description: 'Faculty Added',
+                        description: 'Semester Added',
                     })
                 }
             },
             (error) => {
-                setIsLoaded(true);
                 setError(error);
             }
-        );
-    };
+        )
+    }
+
 
     return (
         <>
-            <Button type='primary' onClick={showModal}>Add Faculty</Button>
+            <Button type='primary' onClick={showModal}>Add Semester</Button>
 
-            <Modal title="Add Faculty" visible={isModalVisible} onCancel={handleCancel} footer={[]}>
-                <Form style={{ "width": "400px", "margin": "20px auto" }} {...layout} form={form} name="control-ref" onFinish={addFaculty}>
+            <Modal title="Add Semester" visible={isModalVisible} onCancel={handleCancel} footer={[]}>
+                <Form style={{ "width": "400px", "margin": "20px auto" }} {...layout} form={form} name="control-ref" onFinish={AddSemester}>
                     <Form.Item
-                        name='facultyName'
-                        label='Faculty Name'
+                        name='semesterName'
+                        label='Semester Name'
                         rules={[
                             {
                                 required: true,
-                                message: 'Fakülte ismi boş bırakılamaz'
+                                message: 'Sömestr ismi boş bırakılamaz'
                             },
                         ]}
                     >
@@ -77,10 +72,11 @@ export default function AddFaculty() {
                     </Form.Item>
                     <Form.Item {...tailLayout}>
                         <Button style={{ 'marginRight': '5px' }} key="back" onClick={handleCancel}>Cancel</Button>
-                        <Button htmlType="submit" type='primary'>Add Faculty</Button>
+                        <Button htmlType="submit" type='primary' onClick={form.resetFields()}>Add Semester</Button>
                     </Form.Item>
                 </Form>
             </Modal>
         </>
     )
 }
+
